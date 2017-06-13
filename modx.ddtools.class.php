@@ -18,7 +18,7 @@ class ddTools {
 	public static $modx;
 	
 	//Contains names of document fields (`site_content`)
-	public static $documentFields = [
+	public static $documentFields = array(
 		'id',
 		'type',
 		'contentType',
@@ -56,16 +56,16 @@ class ddTools {
 		'privatemgr',
 		'content_dispo',
 		'hidemenu'
-	];
+	);
 	
 	//Contains full names of some db tables
-	public static $tables = [
+	public static $tables = array(
 		'site_content' => '',
 		'site_tmplvars' => '',
 		'site_tmplvar_templates' => '',
 		'site_tmplvar_contentvalues' => '',
 		'document_groups' => ''
-	];
+	);
 	
 	/**
 	 * orderedParamsToNamed
@@ -82,9 +82,9 @@ class ddTools {
 	public static function orderedParamsToNamed($params){
 		$params = (object) $params;
 		
-		$result = [];
+		$result = array();
 		
-		$message = [];
+		$message = array();
 		
 		//Перебираем массив соответствия
 		foreach ($params->compliance as $index => $name){
@@ -144,7 +144,7 @@ class ddTools {
 	 * @return {array_associative}
 	 */
 	public static function explodeAssoc($str, $splY = '||', $splX = '::'){
-		$result = [];
+		$result = array();
 		
 		//Если строка пустая, выкидываем сразу
 		if ($str == ''){return $result;}
@@ -190,7 +190,7 @@ class ddTools {
 	 * @return {array} — Unfolded array.
 	 */
 	public static function unfoldArray($arr, $keyPrefix = ''){
-		$output = [];
+		$output = array();
 		
 		//Перебираем массив
 		foreach ($arr as $key => $val){
@@ -226,9 +226,9 @@ class ddTools {
 		$tek = $array[0][$sortBy[$i]];
 		$tekIsNumeric = is_numeric($tek);
 		
-		$arrLeft = [];
-		$arrRight = [];
-		$arrCent = [];
+		$arrLeft = array();
+		$arrRight = array();
+		$arrCent = array();
 		
 		//Перебираем массив
 		foreach ($array as $val){
@@ -294,11 +294,11 @@ class ddTools {
 		}
 		
 		//Fail by default
-		$result = [
+		$result = array(
 			'name' => strtolower($file),
 			'version' => '0',
 			'extension' => !$fileinfo['extension'] ? '' : $fileinfo['extension']
-		];
+		);
 		
 		//Try to get file version [0 — full name, 1 — script name, 2 — version, 3 — all chars after version]
 		preg_match('/(\D*?)-?(\d(?:\.\d+)*(?:-?[A-Za-z])*)(.*)/', $fileinfo['basename'], $match);
@@ -334,7 +334,7 @@ class ddTools {
 		if (!file_exists($destinationDir)){mkdir($destinationDir);}
 		
 		//Получаем файлы в директории
-		$files = array_diff(scandir($sourceDir), ['.', '..']);
+		$files = array_diff(scandir($sourceDir), array('.', '..'));
 		
 		foreach ($files as $file){
 			//Если это папка, обработаем её
@@ -363,7 +363,7 @@ class ddTools {
 		if (!file_exists($dir)){return true;}
 		
 		//Получаем файлы в директории
-		$files = array_diff(scandir($dir), ['.', '..']);
+		$files = array_diff(scandir($dir), array('.', '..'));
 		
 		foreach ($files as $file){
 			//Если это папка, обработаем её
@@ -455,24 +455,24 @@ class ddTools {
 	 * 
 	 * @return {string}
 	 */
-	public static function parseText($params = []){
+	public static function parseText($params = array()){
 		//For backward compatibility
 		if (func_num_args() > 1){
 			//Convert ordered list of params to named
-			$params = self::orderedParamsToNamed([
+			$params = self::orderedParamsToNamed(array(
 				'paramsList' => func_get_args(),
-				'compliance' => ['text', 'data', 'placeholderPrefix', 'placeholderSuffix', 'mergeAll']
-			]);
+				'compliance' => array('text', 'data', 'placeholderPrefix', 'placeholderSuffix', 'mergeAll')
+			));
 		}
 		
 		//Defaults
-		$params = (object) array_merge([
+		$params = (object) array_merge(array(
 			'text' => '',
 			'placeholderPrefix' => '[+',
 			'placeholderSuffix' => '+]',
 			'removeEmptyPlaceholders' => false,
 			'mergeAll' => true
-		], (array) $params);
+		), (array) $params);
 		
 		$result = $params->text;
 		
@@ -526,14 +526,14 @@ class ddTools {
 	 * 
 	 * @return {array} — Массив из двух элементов, где первый — поля документа, второй — TV. Элементами массива TV являются ассоциативные массивы, в которых хранятся 'id' и 'val'.
 	 */
-	public static function explodeFieldsArr($fields = []){
-		$tvs = [];
+	public static function explodeFieldsArr($fields = array()){
+		$tvs = array();
 		//Перебираем поля, раскидываем на поля документа и TV
 		foreach ($fields as $key => $val){
 			//Если это не поле документа
 			if (!in_array($key, self::$documentFields)){
 				//Запоминаем как TV`шку
-				$tvs[$key] = ['val' => $val];
+				$tvs[$key] = array('val' => $val);
 				//Удаляем из полей
 				unset($fields[$key]);
 			}
@@ -553,7 +553,7 @@ class ddTools {
 			}
 		}
 		
-		return [$fields, $tvs];
+		return array($fields, $tvs);
 	}
 	
 	/**
@@ -568,7 +568,7 @@ class ddTools {
 	 * 
 	 * @return {integer|false} — ID нового документа или false, если что-то не так.
 	 */
-	public static function createDocument($fields = [], $groups = false){
+	public static function createDocument($fields = array(), $groups = false){
 		//Если нет хотя бы заголовка, выкидываем
 		if (!$fields['pagetitle']){return false;}
 		
@@ -599,11 +599,11 @@ class ddTools {
 				if (isset($val['id'])){
 					//Добавляем значение TV в базу
 					self::$modx->db->insert(
-						[
+						array(
 							'value' => $val['val'],
 							'tmplvarid' => $val['id'],
 							'contentid' => $id
-						],
+						),
 						self::$tables['site_tmplvar_contentvalues']
 					);
 				}
@@ -614,10 +614,10 @@ class ddTools {
 		if ($groups){
 			//Перебираем все группы
 			foreach ($groups as $gr){
-				self::$modx->db->insert([
+				self::$modx->db->insert(array(
 					'document_group' => $gr,
 					'document' => $id
-				], self::$tables['document_groups']);
+				), self::$tables['document_groups']);
 			}
 		}
 		
@@ -641,14 +641,14 @@ class ddTools {
 		}
 		
 		//Добавляем в массивы documentMap и aliasListing информацию о новом документе
-		self::$modx->documentMap[] = [$documentParent => $id];
-		self::$modx->aliasListing[$id] = [
+		self::$modx->documentMap[] = array($documentParent => $id);
+		self::$modx->aliasListing[$id] = array(
 			'id' => $id,
 			'alias' => $documentAlias,
 			'path' => $documentPath,
 			'parent' => $documentParent,
 			'isfolder' => $documentIsFolder
-		];
+		);
 		
 		//Добавляем в documentListing
 		if(self::$modx->aliasListing[$id]['path'] !== ''){
@@ -679,7 +679,7 @@ class ddTools {
 	 * 
 	 * @return {boolean} — true — если всё хорошо, или false — если такого документа нет, или ещё что-то пошло не так.
 	 */
-	public static function updateDocument($id = 0, $update = [], $where = ''){
+	public static function updateDocument($id = 0, $update = array(), $where = ''){
 		if ($id == 0 && trim($where) == ''){return false;}
 		
 		$where_sql = '';
@@ -740,11 +740,11 @@ class ddTools {
 							if ($updatedRows[1] == 0){
 								//Добавляем значение нужной TV в базу
 								self::$modx->db->insert(
-									[
+									array(
 										'value' => $val['val'],
 										'tmplvarid' => $val['id'],
 										'contentid' => $doc['id']
-									],
+									),
 									self::$tables['site_tmplvar_contentvalues']
 								);
 							}
@@ -781,7 +781,7 @@ class ddTools {
 	 * 
 	 * @return {array|false}
 	 */
-	public static function getDocuments($ids = [], $published = 'all', $deleted = 0, $fields = '*', $where = '', $sort = 'menuindex', $dir = 'ASC', $limit = ''){
+	public static function getDocuments($ids = array(), $published = 'all', $deleted = 0, $fields = '*', $where = '', $sort = 'menuindex', $dir = 'ASC', $limit = ''){
 		//Проверка на устаревшее значение $published
 		if($published === false){
 			$published = 'all';
@@ -810,7 +810,7 @@ class ddTools {
 			if(strpos($ids, ',') !== false){
 				$ids = array_filter(array_map('intval', explode(',', $ids)));
 			}else{
-				$ids = [$ids];
+				$ids = array($ids);
 			}
 		}
 		
@@ -887,7 +887,7 @@ class ddTools {
 		if ($id == 0){
 			return false;
 		}else{
-			$docs = self::getDocuments([$id], $published, $deleted, $fields, '', '', '', 1);
+			$docs = self::getDocuments(array($id), $published, $deleted, $fields, '', '', '', 1);
 			
 			if ($docs != false){
 				return $docs[0];
@@ -916,7 +916,7 @@ class ddTools {
 	 * 
 	 * @return {array|false}
 	 */
-	public static function getTemplateVars($idnames = [], $fields = '*', $docid = '', $published = 'all', $sort = 'rank', $dir = 'ASC'){
+	public static function getTemplateVars($idnames = array(), $fields = '*', $docid = '', $published = 'all', $sort = 'rank', $dir = 'ASC'){
 		//Проверка на устаревшее значение $published
 		if($published === false){
 			$published = 'all';
@@ -973,10 +973,10 @@ class ddTools {
 			
 			foreach ($docRow as $key => $value){
 				if ($idnames == '*' || in_array($key, $idnames)){
-					array_push($result, [
+					array_push($result, array(
 						'name' => $key,
 						'value' => $value
-					]);
+					));
 				}
 			}
 			
@@ -1001,7 +1001,7 @@ class ddTools {
 	 * 
 	 * @return {array|false}
 	 */
-	public static function getTemplateVarOutput($idnames = [], $docid = '', $published = 'all', $sep = ''){
+	public static function getTemplateVarOutput($idnames = array(), $docid = '', $published = 'all', $sep = ''){
 		//Проверка на устаревшее значение $published
 		if($published === false){
 			$published = 'all';
@@ -1017,8 +1017,8 @@ class ddTools {
 		if (count($idnames) == 0){
 			return false;
 		}else{
-			$output = [];
-			$vars = ($idnames == '*' || is_array($idnames)) ? $idnames : [$idnames];
+			$output = array();
+			$vars = ($idnames == '*' || is_array($idnames)) ? $idnames : array($idnames);
 			
 			$docid = intval($docid) ? intval($docid) : self::$modx->documentIdentifier;
 			// remove sort for speed
@@ -1149,7 +1149,7 @@ class ddTools {
 	 * 
 	 * @return {array|false} — Массив документов или false, если что-то не так.
 	 */
-	public static function getDocumentChildrenTVarOutput($parentid = 0, $tvidnames = [], $published = 1, $sortBy = 'menuindex', $sortDir = 'ASC', $where = '', $resultKey = 'id'){
+	public static function getDocumentChildrenTVarOutput($parentid = 0, $tvidnames = array(), $published = 1, $sortBy = 'menuindex', $sortDir = 'ASC', $where = '', $resultKey = 'id'){
 		//Получаем всех детей
 		$docs = self::getDocumentChildren($parentid, $published, 0, 'id', $where, $sortBy, $sortDir);
 		
@@ -1157,7 +1157,7 @@ class ddTools {
 		if (!$docs){
 			return false;
 		}else{
-			$result = [];
+			$result = array();
 			
 			$unsetResultKey = false;
 			
@@ -1171,7 +1171,7 @@ class ddTools {
 					$tvidnames != '*' &&
 					$tvidnames != $resultKey
 				){
-					$tvidnames = [$tvidnames, $resultKey];
+					$tvidnames = array($tvidnames, $resultKey);
 					$unsetResultKey = true;
 				}
 			}
@@ -1222,13 +1222,13 @@ class ddTools {
 	 * @return $result['startup'] {boolean} — Подключён ли скрипт в <head>?.
 	 * @return $result['pos'] {integer} — Ключ зарегистрированного скрипта в соответствующем внутреннем массиве MODX.
 	 */
-	public static function regEmptyClientScript($params = []){
+	public static function regEmptyClientScript($params = array()){
 		//Defaults
-		$params = (object) array_merge([
+		$params = (object) array_merge(array(
 			'name' => '',
 			'version' => '0',
 			'startup' => false
-		], (array) $params);
+		), (array) $params);
 		
 		//Required params
 		if (empty($params->name)){
@@ -1278,14 +1278,14 @@ class ddTools {
 		//Если надо подключить перед </head>
 		if ($startup){
 			//Позиция такова: либо старая (уже вычислена), либо максимальное значение между нолём и одним из ключей массива подключённых скриптов + 1 (это, чтобы заполнить возможные дыры)
-			$pos = isset($overwritepos) ? $overwritepos : max(array_merge([0], array_keys(self::$modx->sjscripts))) + 1;
+			$pos = isset($overwritepos) ? $overwritepos : max(array_merge(array(0), array_keys(self::$modx->sjscripts))) + 1;
 			if ($useThisVer){
 				//Запоминаем пустую строку подключения в нужный массив, т.к. подключаем мануально.
 				self::$modx->sjscripts[$pos] = '';
 			}
 		//Если надо подключить перед </body>, то всё по аналогии, только массив другой
 		}else{
-			$pos = isset($overwritepos) ? $overwritepos : max(array_merge([0], array_keys(self::$modx->jscripts))) + 1;
+			$pos = isset($overwritepos) ? $overwritepos : max(array_merge(array(0), array_keys(self::$modx->jscripts))) + 1;
 			if ($useThisVer){
 				self::$modx->jscripts[$pos] = '';
 			}
@@ -1296,13 +1296,13 @@ class ddTools {
 		self::$modx->loadedjscripts[$name]['startup'] = $startup;
 		self::$modx->loadedjscripts[$name]['pos'] = $pos;
 		
-		return [
+		return array(
 			'name' => $name,
 			'version' => $version,
 			'useThisVer' => $useThisVer,
 			'startup' => $startup,
 			'pos' => $pos
-		];
+		);
 	}
 	
 	/**
@@ -1372,8 +1372,8 @@ class ddTools {
 	 * @return {array_associative} — An array, in which the correct parameter names are the keys and the parameter values are the values.
 	 */
 	public static function verifyRenamedParams($params, $compliance){
-		$result = [];
-		$message = [];
+		$result = array();
+		$message = array();
 		
 		$params_names = array_keys($params);
 		
@@ -1382,7 +1382,7 @@ class ddTools {
 			//Если параметр с новым именем не задан
 			if (!isset($params[$newName])){
 				//Если старое имя только одно, всё равно приведём к массиву для удобства
-				if (!is_array($oldNames)){$oldNames = [$oldNames];}
+				if (!is_array($oldNames)){$oldNames = array($oldNames);}
 				
 				//Находим все старые, которые используются
 				$oldNames = array_values(array_intersect($params_names, $oldNames));
@@ -1430,18 +1430,18 @@ class ddTools {
 		//For backward compatibility
 		if (func_num_args() > 1){
 			//Convert ordered list of params to named
-			$params = self::orderedParamsToNamed([
+			$params = self::orderedParamsToNamed(array(
 				'paramsList' => func_get_args(),
-				'compliance' => ['to', 'text', 'from', 'subject', 'fileInputNames']
-			]);
+				'compliance' => array('to', 'text', 'from', 'subject', 'fileInputNames')
+			));
 		}
 		
 		//Defaults
-		$params = (object) array_merge([
+		$params = (object) array_merge(array(
 			'from' => self::$modx->getConfig('emailsender'),
 			'subject' => 'Mail from '.self::$modx->config['site_url'],
-			'fileInputNames' => []
-		], (array) $params);
+			'fileInputNames' => array()
+		), (array) $params);
 		
 		//Конвертируем тему в base64
 		$params->subject = "=?UTF-8?B?".base64_encode($params->subject)."?=";
@@ -1458,7 +1458,7 @@ class ddTools {
 		$message .= "Content-Type: text/html; charset=UTF-8 ".PHP_EOL.PHP_EOL.trim($params->text, PHP_EOL).PHP_EOL."--".$bound;
 		
 		if(!empty($params->fileInputNames)){
-			$attachFiles = [];
+			$attachFiles = array();
 			
 			//Перебираем имена полей с файлами
 			foreach($params->fileInputNames as $value){
@@ -1500,7 +1500,7 @@ class ddTools {
 		//Добавляем разделитель окончания сообщения
 		$message .= "--";
 		
-		$result = [];
+		$result = array();
 		
 		foreach ($params->to as $val){
 			//Если адрес валидный
@@ -1547,6 +1547,16 @@ class ddTools {
 		}
 		
 		return $output;
+	}
+	public static function extendLanguage($path = '', $language = "") {
+		global $manager_language, $_lang;
+		if (!$path) $path = dirname(__FILE__);
+		$path = MODX_BASE_PATH.str_replace(MODX_BASE_PATH,'',$path);
+		if (!$language) $language = $manager_language;
+		include_once("{$path}lang/english.inc.php");
+if ($language !== 'english' && is_file("{$path}lang/{$language}.inc.php")) {
+			include_once("{$path}lang/{$language}.inc.php");
+		}
 	}
 }
 
